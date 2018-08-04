@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Marker from './Marker';
+import InfoWindow from './InfoWindow';
 import PropTypes from 'prop-types';
 
 class Map extends Component {
   state = {
     map: null,
+    marker: null,
   }
 
   componentDidMount = () => {
@@ -16,15 +18,38 @@ class Map extends Component {
     this.setState({map: this.map});
   };
 
+  setMarker = marker => {
+    this.setState({marker: marker});
+  };
+
+  closeInfoWindow = () => {
+    this.setState({ marker: null });
+  };
+
   render() {
     return (
       <div id="map" ref="map" role="application">
       {this.state.map && (
         <div className="markers">
           {this.props.locations.map(marker => (
-            <Marker key={marker.id} location={marker.position} map={ this.state.map } />
+            <Marker
+              key={marker.id}
+              location={marker.position}
+              title={marker.name}
+              map={this.state.map}
+              setMarker={this.setMarker}
+            />
           ))}
         </div>
+      )}
+      {this.state.marker && (
+          <InfoWindow
+            marker={this.state.marker}
+            map={this.state.map}
+            close={this.closeInfoWindow}
+          >
+            <div>{this.state.marker.title}</div>
+          </InfoWindow>
       )}
       </div>
     );
