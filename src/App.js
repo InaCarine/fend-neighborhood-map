@@ -15,13 +15,13 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    window.initAPI = this.initAPI;
-
-    GoogleAPI.load();
-  };
-
-  initAPI = () => {
-    this.setState({isAPILoaded: true});
+    GoogleAPI.load()
+      .then(() => {
+        this.setState({ isAPILoaded: true });
+      })
+      .catch((error) => {
+        alert(`Oops, something went wrong when trying to load: ${error.target.src}`)
+      });
   };
 
   render() {

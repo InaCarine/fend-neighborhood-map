@@ -16,21 +16,16 @@ class Map extends Component {
     });
 
     this.setState({map: this.map});
-    
-
-    // const tribeca = { lat: 59.9139, lng: 10.7522 };
-    // let marker = new google.maps.Marker({
-    //   position: tribeca,
-    //   map: this.map,
-    //   title: 'first marker!',
-    // });
   };
 
   render() {
     return (
       <div id="map" ref="map">
       {this.state.map && (
-        <Marker location={{lat: 59.9139, lng: 10.7522}} map={ this.state.map } />
+        <div>
+        <Marker key='hi' location={{lat: 59.9139, lng: 10.7522}} map={ this.state.map } />
+            <Marker key="hi2" location={{ lat: 63.4305, lng: 10.3951}} map={ this.state.map } />
+        </div>
       )}
       </div>
     );
