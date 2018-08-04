@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import Map from './components/Map';
 import * as GoogleAPI from './utils/GoogleAPI';
 
-/* global google */
-
 import './App.css';
 
 class App extends Component {
   state = {
     isAPILoaded: false,
-    map: null,
+    settings: {
+      center: { lat: 59.9139, lng: 10.7522 },
+      zoom: 6,
+    },
+    locations: [],
   };
 
   componentDidMount = () => {
@@ -22,17 +24,16 @@ class App extends Component {
     this.setState({isAPILoaded: true});
   };
 
-  initMap = (map) => {
-    this.setState({map: map});
-  };
-
   render() {
     return (
       <div className="App">
 
       {/* TODO: render header, css to move over map */}
-      { this.state.isAPILoaded &&  (
-        <Map initMap={this.initMap} />
+      { this.state.isAPILoaded && (
+        <Map 
+          settings={this.state.settings}
+          locations={this.state.locations}
+        />
       )}
       
       </div>

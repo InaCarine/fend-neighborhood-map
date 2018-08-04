@@ -1,32 +1,44 @@
 import React, { Component } from 'react';
+import Marker from './Marker';
+import PropTypes from 'prop-types';
 
 /* global google */
 
 class Map extends Component {
   state = {
     map: null,
-    settings: {
-      center: { lat: 48.858608, lng: 2.294471 },
-      zoom: 10,
-    },
-  };
+  }
 
   componentDidMount = () => {
-    console.log('yo');
-
     this.map = new google.maps.Map(this.refs.map, {
-      center: this.state.settings.center,
-      zoom: 16
+      center: this.props.settings.center,
+      zoom: this.props.settings.zoom,
     });
 
-    this.props.initMap(this.map);
+    this.setState({map: this.map});
+    
+
+    // const tribeca = { lat: 59.9139, lng: 10.7522 };
+    // let marker = new google.maps.Marker({
+    //   position: tribeca,
+    //   map: this.map,
+    //   title: 'first marker!',
+    // });
   };
 
   render() {
     return (
-      <div id="map" ref="map"></div>
+      <div id="map" ref="map">
+      {this.state.map && (
+        <Marker location={{lat: 59.9139, lng: 10.7522}} map={ this.state.map } />
+      )}
+      </div>
     );
-  }
+  };
 }
+
+Map.propTypes = {
+  settings: PropTypes.object.isRequired,
+};
 
 export default Map;
