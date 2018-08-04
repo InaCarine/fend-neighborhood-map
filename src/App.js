@@ -1,18 +1,40 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Map from './components/Map';
+import * as GoogleAPI from './utils/GoogleAPI';
+
+/* global google */
+
 import './App.css';
 
 class App extends Component {
+  state = {
+    isAPILoaded: false,
+    map: null,
+  };
+
+  componentDidMount = () => {
+    window.initAPI = this.initAPI;
+
+    GoogleAPI.load();
+  };
+
+  initAPI = () => {
+    this.setState({isAPILoaded: true});
+  };
+
+  initMap = (map) => {
+    this.setState({map: map});
+  };
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+
+      {/* TODO: render header, css to move over map */}
+      { this.state.isAPILoaded &&  (
+        <Map initMap={this.initMap} />
+      )}
+      
       </div>
     );
   }
