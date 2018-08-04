@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import Marker from './Marker';
 import PropTypes from 'prop-types';
 
-/* global google */
-
 class Map extends Component {
   state = {
     map: null,
   }
 
   componentDidMount = () => {
-    this.map = new google.maps.Map(this.refs.map, {
+    this.map = new window.google.maps.Map(this.refs.map, {
       center: this.props.settings.center,
       zoom: this.props.settings.zoom,
     });
@@ -20,11 +18,12 @@ class Map extends Component {
 
   render() {
     return (
-      <div id="map" ref="map">
+      <div id="map" ref="map" role="application">
       {this.state.map && (
-        <div>
-        <Marker key='hi' location={{lat: 59.9139, lng: 10.7522}} map={ this.state.map } />
-            <Marker key="hi2" location={{ lat: 63.4305, lng: 10.3951}} map={ this.state.map } />
+        <div className="markers">
+          {this.props.locations.map(marker => (
+            <Marker key={marker.id} location={marker.position} map={ this.state.map } />
+          ))}
         </div>
       )}
       </div>
@@ -34,6 +33,7 @@ class Map extends Component {
 
 Map.propTypes = {
   settings: PropTypes.object.isRequired,
+  locations: PropTypes.array.isRequired,
 };
 
 export default Map;

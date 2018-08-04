@@ -1,0 +1,42 @@
+[
+  {
+    "id": "oslo",
+    "name": "Oslo",
+    "position": {
+      "lat": 59.9139,
+      "lng": 10.7522
+    }
+  },
+  {
+    "id": "trondheim",
+    "name": "Trondheim",
+    "position": {
+      "lat": 63.4305,
+      "lng": 10.3951
+    }
+  },
+  {
+    "id": "geirangerfjorden",
+    "name": "Geirangerfjorden",
+    "position": {
+      "lat": 62.1015,
+      "lng": 7.0941
+    }
+  },
+  {
+    "id": "vigelandsparken",
+    "name": "Vigelandsparken",
+    "position": {
+      "lat": 59.9270,
+      "lng": 10.7009
+    }
+  },
+  {
+    "id": "hemsedal",
+    "name": "Hemsedal",
+    "position": {
+      "lat": 60.8601,
+      "lng": 8.5179
+    }
+  }
+]
