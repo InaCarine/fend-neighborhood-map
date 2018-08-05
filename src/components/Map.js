@@ -18,8 +18,28 @@ class Map extends Component {
     this.setState({map: this.map});
   };
 
+  componentDidUpdate = (prevProps) => {
+    if(prevProps.marker === this.props.marker) return;
+
+    let activeMarker;
+    if (this.props.marker) {
+      activeMarker = this.markers.filter(
+        marker => marker.dataId === this.props.marker
+      )[0];
+    } else {
+      activeMarker = this.state.marker;
+    }
+
+    this.setMarker(activeMarker);
+  };
+
   setMarker = marker => {
     this.setState({marker: marker});
+  };
+
+  markers = [];
+  addMarker = (marker) => {
+    if(marker) this.markers.push(marker);
   };
 
   closeInfoWindow = () => {
@@ -39,17 +59,18 @@ class Map extends Component {
                 map={this.state.map}
                 setMarker={this.setMarker}
                 addMarker={this.addMarker}
+                dataId={marker.id}
               />
             ))}
           </div>
         )}
         {this.state.marker && (
             <InfoWindow
-              marker={this.state.marker}
+            marker={this.state.marker}
               map={this.state.map}
               close={this.closeInfoWindow}
             >
-              <div>{this.state.marker.title}</div>
+            <div>{this.state.marker.title}</div>
             </InfoWindow>
         )}
       </div>
@@ -60,6 +81,7 @@ class Map extends Component {
 Map.propTypes = {
   settings: PropTypes.object.isRequired,
   locations: PropTypes.array.isRequired,
+  marker: PropTypes.string,
 };
 
 export default Map;

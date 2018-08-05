@@ -5,6 +5,8 @@ import * as data from './data/locations.json';
 
 import './App.css';
 
+// TODO: Add error window
+
 class App extends Component {
   state = {
     isAPILoaded: false,
@@ -28,8 +30,12 @@ class App extends Component {
 
   handleSearch = (event) => {
     const query = event.target.value;
-    this.setState({ query: query.trim() });
+    this.setState({ query: query.trim(), marker: null });
   };
+
+  setMarker = (marker) => {
+    this.setState({marker: marker});
+  }
 
   render() {
     const { locations, query } = this.state;
@@ -48,14 +54,30 @@ class App extends Component {
       <div className="App">
 
         <header>
+          {/* TODO: Add form, label, accessible */}
             <input name="search" type="text" placeholder="Search..." value={this.state.query} onChange={this.handleSearch} />
         </header>
         { this.state.isAPILoaded && (
           <Map
             settings={this.state.settings}
             locations={showingMarkers}
+            marker={this.state.marker}
             />
         )}
+
+        {/* TODO: Move to a new component? */}
+        <nav>
+          {/* TODO: button to show/hide locations */}
+          <ul className="locations">
+            {showingMarkers.map(marker => (
+              <li
+                key={marker.id} className="location">
+                {/* TODO: Move to component? */}
+                  <button onClick={() => {this.setMarker(marker.id)}}>{marker.name}</button>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
       </div>
     );

@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 /*
 * @description: A google marker component
 * methods: componentDidMount, componentWillUnmount, render, renderMarker
-* props: location {Object}, map {Object}, title {String}, setMarker {func}
+* props: location {Object}, map {Object}, title {String},
+*        setMarker {func}, addMarker {func}, dataId {String}
 */
 class Marker extends Component {
   /*
@@ -20,6 +21,7 @@ class Marker extends Component {
   */
   componentWillUnmount = () => {
     if(this.marker) {
+      this.props.setMarker(null);
       this.marker.setMap(null);
     }
   }
@@ -35,6 +37,8 @@ class Marker extends Component {
       animation: window.google.maps.Animation.DROP,
     });
 
+    this.marker.dataId = this.props.dataId;
+    this.props.addMarker(this.marker);
     this.marker.addListener('click', () => { this.props.setMarker(this.marker) });
   }
 
@@ -53,7 +57,9 @@ class Marker extends Component {
 Marker.propTypes = {
   location: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
+  dataId: PropTypes.string.isRequired,
   setMarker: PropTypes.func.isRequired,
+  addMarker: PropTypes.func.isRequired,
 };
 
 export default Marker;
