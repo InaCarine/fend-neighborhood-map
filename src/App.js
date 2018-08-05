@@ -13,6 +13,7 @@ class App extends Component {
       zoom: 6,
     },
     locations: data,
+    query: '',
   };
 
   componentDidMount = () => {
@@ -25,18 +26,37 @@ class App extends Component {
       });
   };
 
+  handleSearch = (event) => {
+    const query = event.target.value;
+    this.setState({ query: query.trim() });
+  };
+
   render() {
+    const { locations, query } = this.state;
+    let showingMarkers;
+
+    if (query) {
+      // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+      const escapeString = query.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&');
+      const match = new RegExp(escapeString, 'i');
+      showingMarkers = locations.filter((location) => match.test(location.name));
+    } else {
+      showingMarkers = locations;
+    }
+
     return (
       <div className="App">
 
-      {/* TODO: render header, css to move over map */}
-      { this.state.isAPILoaded && (
-        <Map 
-          settings={this.state.settings}
-          locations={this.state.locations}
-        />
-      )}
-      
+        <header>
+            <input name="search" type="text" placeholder="Search..." value={this.state.query} onChange={this.handleSearch} />
+        </header>
+        { this.state.isAPILoaded && (
+          <Map
+            settings={this.state.settings}
+            locations={showingMarkers}
+            />
+        )}
+
       </div>
     );
   }

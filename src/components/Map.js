@@ -29,28 +29,29 @@ class Map extends Component {
   render() {
     return (
       <div id="map" ref="map" role="application">
-      {this.state.map && (
-        <div className="markers">
-          {this.props.locations.map(marker => (
-            <Marker
-              key={marker.id}
-              location={marker.position}
-              title={marker.name}
+        {this.state.map && (
+          <div className="markers">
+            {this.props.locations.map(marker => (
+              <Marker
+                key={marker.id}
+                location={marker.position}
+                title={marker.name}
+                map={this.state.map}
+                setMarker={this.setMarker}
+                addMarker={this.addMarker}
+              />
+            ))}
+          </div>
+        )}
+        {this.state.marker && (
+            <InfoWindow
+              marker={this.state.marker}
               map={this.state.map}
-              setMarker={this.setMarker}
-            />
-          ))}
-        </div>
-      )}
-      {this.state.marker && (
-          <InfoWindow
-            marker={this.state.marker}
-            map={this.state.map}
-            close={this.closeInfoWindow}
-          >
-            <div>{this.state.marker.title}</div>
-          </InfoWindow>
-      )}
+              close={this.closeInfoWindow}
+            >
+              <div>{this.state.marker.title}</div>
+            </InfoWindow>
+        )}
       </div>
     );
   };
