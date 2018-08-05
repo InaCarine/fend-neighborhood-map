@@ -13,6 +13,10 @@ class Map extends Component {
     this.map = new window.google.maps.Map(this.refs.map, {
       center: this.props.settings.center,
       zoom: this.props.settings.zoom,
+      zoomControl: true,
+      mapTypeControl: false,
+      streetViewControl: true,
+      fullscreenControl: false
     });
 
     this.setState({map: this.map});
@@ -31,10 +35,15 @@ class Map extends Component {
     }
 
     this.setMarker(activeMarker);
+
+    const bounds = new window.google.maps.LatLngBounds();
+    this.markers.map(marker =>  bounds.extend(marker.position));
+    this.map.fitBounds(bounds);
   };
 
   setMarker = marker => {
     this.setState({marker: marker});
+    this.centerMap();
   };
 
   markers = [];
@@ -46,7 +55,14 @@ class Map extends Component {
     this.setState({ marker: null });
   };
 
+  centerMap = () => {
+    if(this.state.marker) {
+      this.map.setCenter(this.state.marker.position);
+    }
+  };
+
   render() {
+    this.centerMap();
     return (
       <div id="map" ref="map" role="application">
         {this.state.map && (
