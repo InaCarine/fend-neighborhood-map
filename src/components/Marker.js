@@ -3,11 +3,31 @@ import PropTypes from 'prop-types';
 
 /*
 * @description: A google marker component
-* methods: componentDidMount, componentWillUnmount, render
+* methods: componentDidMount, componentWillUnmount, render, renderMarker
 * props: location {Object}, map {Object}, title {String}, setMarker {func}
 */
 class Marker extends Component {
+  /*
+  * @description: Called after component have mounted
+  */
   componentDidMount = () => {
+    this.renderMarker();
+  };
+
+  /*
+  * @description: Called before component gets destroyed
+  * In this case it will remove the marker from the map
+  */
+  componentWillUnmount = () => {
+    if(this.marker) {
+      this.marker.setMap(null);
+    }
+  }
+
+  /*
+  * @description: creates a new google maps marker
+  */
+  renderMarker = () => {
     this.marker = new window.google.maps.Marker({
       position: this.props.location,
       map: this.props.map,
@@ -15,20 +35,21 @@ class Marker extends Component {
       animation: window.google.maps.Animation.DROP,
     });
 
-    this.marker.addListener('click', () => { this.props.setMarker(this.marker)});
-  };
-
-  componentWillUnmount = () => {
-    if(this.marker) {
-      this.marker.setMap(null);
-    }
+    this.marker.addListener('click', () => { this.props.setMarker(this.marker) });
   }
 
+  /*
+  * @description: renders the component
+  * In this case, nothing needs to be rendered
+  */
   render() {
     return null;
   };
 };
 
+/*
+* @description: The required props for the component
+*/
 Marker.propTypes = {
   location: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
