@@ -3,6 +3,9 @@ import Marker from './Marker';
 import InfoWindow from './InfoWindow';
 import PropTypes from 'prop-types';
 
+import iconMarker from '../img/icon-marker.png';
+import iconMarkerFocus from '../img/icon-marker-focus.png';
+
 class Map extends Component {
   state = {
     map: null,
@@ -20,49 +23,67 @@ class Map extends Component {
     });
 
     this.setState({map: this.map});
+    this.setBounds();
   };
 
   componentDidUpdate = (prevProps) => {
-    if(prevProps.marker === this.props.marker) return;
+    if (prevProps.marker === this.props.marker) return;
 
     let activeMarker;
     if (this.props.marker) {
       activeMarker = this.markers.filter(
         marker => marker.dataId === this.props.marker
       )[0];
+
     } else {
       activeMarker = this.state.marker;
     }
 
     this.setMarker(activeMarker);
-
-    const bounds = new window.google.maps.LatLngBounds();
-    this.markers.map(marker =>  bounds.extend(marker.position));
-    this.map.fitBounds(bounds);
-  };
-
-  setMarker = marker => {
-    this.setState({marker: marker});
-    this.centerMap();
   };
 
   markers = [];
   addMarker = (marker) => {
-    if(marker) this.markers.push(marker);
+    if (marker) this.markers.push(marker);
+  };
+
+  setMarker = marker => {
+    if (this.state.marker) this.setIcon(iconMarker);
+    this.setState({marker: marker});
+  };
+
+  setIcon = (icon) => {
+    const img = {
+      url: icon,
+      scaledSize: new window.google.maps.Size(26, 40)
+    }
+
+    this.state.marker.setIcon(img);
   };
 
   closeInfoWindow = () => {
+    this.setIcon(iconMarker);
     this.setState({ marker: null });
+    this.props.setMarker('');
   };
 
   centerMap = () => {
-    if(this.state.marker) {
+    if (this.state.marker) {
       this.map.setCenter(this.state.marker.position);
     }
   };
 
+  setBounds = () => {
+    if (!this.map) return;
+    const bounds = new window.google.maps.LatLngBounds();
+    this.props.locations.map(marker => bounds.extend(marker.position));
+    this.map.fitBounds(bounds);
+  };
+
   render() {
     this.centerMap();
+    if (this.state.marker) this.setIcon(iconMarkerFocus);
+
     return (
       <div id="map" ref="map" role="application">
         {this.state.map && (
@@ -76,6 +97,7 @@ class Map extends Component {
                 setMarker={this.setMarker}
                 addMarker={this.addMarker}
                 dataId={marker.id}
+                icon={iconMarker}
               />
             ))}
           </div>

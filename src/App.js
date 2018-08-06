@@ -12,7 +12,7 @@ class App extends Component {
     isAPILoaded: false,
     settings: {
       center: { lat: 59.9139, lng: 10.7522 },
-      zoom: 6,
+      zoom: 8,
     },
     locations: data,
     query: '',
@@ -30,7 +30,7 @@ class App extends Component {
 
   handleSearch = (event) => {
     const query = event.target.value;
-    this.setState({ query: query.trim(), marker: null });
+    this.setState({ query: query.trim(), marker: '' });
   };
 
   setMarker = (marker) => {
@@ -40,6 +40,8 @@ class App extends Component {
   render() {
     const { locations, query } = this.state;
     let showingMarkers;
+
+    console.log(this.state.marker);
 
     if (query) {
       // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
@@ -62,6 +64,7 @@ class App extends Component {
             settings={this.state.settings}
             locations={showingMarkers}
             marker={this.state.marker}
+            setMarker={this.setMarker}
             />
         )}
 

@@ -35,11 +35,24 @@ class Marker extends Component {
       map: this.props.map,
       title: this.props.title || '',
       animation: window.google.maps.Animation.DROP,
+      dataId: this.props.dataId,
     });
 
-    this.marker.dataId = this.props.dataId;
+    this.setIcon(this.props.icon);
+
     this.props.addMarker(this.marker);
-    this.marker.addListener('click', () => { this.props.setMarker(this.marker) });
+    this.marker.addListener('click', () => {
+      this.props.setMarker(this.marker)
+    });
+  }
+
+  setIcon = (icon) => {
+    const img = {
+      url: icon,
+      scaledSize: new window.google.maps.Size(26, 40)
+    }
+
+    this.marker.setIcon(img);
   }
 
   /*
