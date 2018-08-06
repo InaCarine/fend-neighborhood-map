@@ -9,7 +9,6 @@ import iconMarkerFocus from '../img/icon-marker-focus.png';
 class Map extends Component {
   state = {
     map: null,
-    marker: null,
   }
 
   componentDidMount = () => {
@@ -29,6 +28,9 @@ class Map extends Component {
   componentDidUpdate = (prevProps) => {
     if (prevProps.marker === this.props.marker) return;
 
+    // TODO: probs can remove this now that marker state is in app
+    // tho still need to get the marker object, if marker was selected from the list
+    // unless I set the icon a different way, in the marker?
     let activeMarker;
     if (this.props.marker) {
       activeMarker = this.markers.filter(
@@ -39,7 +41,8 @@ class Map extends Component {
       activeMarker = this.state.marker;
     }
 
-    this.setMarker(activeMarker);
+    // TODO: same with this, probs no point setting it here
+    this.props.showInfoWindow(activeMarker);
   };
 
   markers = [];
@@ -47,6 +50,7 @@ class Map extends Component {
     if (marker) this.markers.push(marker);
   };
 
+// TODO: Moved over to app, still need a way to set the icon
   setMarker = marker => {
     if (this.state.marker) this.setIcon(iconMarker);
     this.setState({marker: marker});
@@ -61,6 +65,7 @@ class Map extends Component {
     this.state.marker.setIcon(img);
   };
 
+  // TODO: Moved this to app, again still need a way to set icon
   closeInfoWindow = () => {
     this.setIcon(iconMarker);
     this.setState({ marker: null });
@@ -94,7 +99,7 @@ class Map extends Component {
                 location={marker.position}
                 title={marker.name}
                 map={this.state.map}
-                setMarker={this.setMarker}
+                showInfoWindow={this.props.showInfoWindow}
                 addMarker={this.addMarker}
                 dataId={marker.id}
                 icon={iconMarker}
@@ -106,7 +111,7 @@ class Map extends Component {
             <InfoWindow
             marker={this.state.marker}
               map={this.state.map}
-              close={this.closeInfoWindow}
+              close={this.props.hideInfoWindow}
             >
             <div>{this.state.marker.title}</div>
             </InfoWindow>
