@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
+// TODO: If no state, might be able to change this to stateless function
+
 /*
 * @description: A google marker component
 * methods: componentDidMount, componentWillUnmount, render, renderMarker
@@ -18,10 +20,13 @@ class Marker extends Component {
   /*
   * @description: Called before component gets destroyed
   * In this case it will remove the marker from the map
+  * This is for when the user is searching among the markers
   */
   componentWillUnmount = () => {
     if(this.marker) {
-      this.props.setMarker(null);
+      // TODO: If infoWindow is open, close it (when searching)
+      this.props.hideInfoWindow();
+      //this.props.setMarker(null);
       this.marker.setMap(null);
     }
   }
@@ -42,7 +47,7 @@ class Marker extends Component {
 
     this.props.addMarker(this.marker);
     this.marker.addListener('click', () => {
-      this.props.setMarker(this.marker)
+      this.props.showInfoWindow(this.marker)
     });
   }
 
