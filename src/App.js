@@ -16,6 +16,8 @@ class App extends Component {
     },
     locations: data,
     query: '',
+    marker: null,
+    infoWindow: false,
   };
 
   componentDidMount = () => {
@@ -33,9 +35,13 @@ class App extends Component {
     this.setState({ query: query.trim(), marker: '' });
   };
 
-  setMarker = (marker) => {
-    this.setState({marker: marker});
-  }
+  showInfoWindow = (marker) => {
+    this.setState({marker: marker, infoWindow: true});
+  };
+  
+  hideInfoWindow = () => {
+    this.setState({marker: null, infoWindow: false});
+  };
 
   render() {
     const { locations, query } = this.state;
@@ -64,7 +70,9 @@ class App extends Component {
             settings={this.state.settings}
             locations={showingMarkers}
             marker={this.state.marker}
-            setMarker={this.setMarker}
+            infoWindow={this.state.infoWindow}
+            showInfoWindow={this.showInfoWindow}
+            hideInfoWindow={this.hideInfoWindow}
             />
         )}
 
@@ -76,7 +84,7 @@ class App extends Component {
               <li
                 key={marker.id} className="location">
                 {/* TODO: Move to component? */}
-                  <button onClick={() => {this.setMarker(marker.id)}}>{marker.name}</button>
+                  <button onClick={() => {this.showInfoWindow(marker.id)}}>{marker.name}</button>
               </li>
             ))}
           </ul>
