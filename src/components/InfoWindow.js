@@ -4,28 +4,46 @@ import PropTypes from 'prop-types';
 
 class InfoWindow extends Component {
   componentDidMount = () => {
-    this.children = ReactDOMServer.renderToString(this.props.children);
-
-    this.infoWindow = new window.google.maps.InfoWindow();
-    this.infoWindow.marker = this.props.marker;
-    this.infoWindow.setContent(this.children);
-    this.infoWindow.open(this.props.map, this.props.marker);
-
-    this.infoWindow.addListener('closeclick', () => {
-      this.infoWindow.marker = null;
-      this.props.close(this.infoWindow);
-      this.infoWindow = null;
-    });
-
+    this.renderInfoWindow();
   };
 
-  componentDidUpdate = (prevProps) => {
-    if(prevProps.marker === this.props.marker) return;
+  componentWillUnmount = () => {
+    if (this.infoWindow) {
+      this.infoWindow.marker = null;
+      this.infoWindow.close();
+      this.infoWindow = null;
+      this.props.hideInfoWindow();
+    }
+  }
 
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.currentMarker.position !== this.props.currentMarker.position) {
+      this.infoWindow.marker = this.props.currentMarker;
+      this.infoWindow.open(this.props.map, this.props.currentMarker);
+    }
+
+    if (prevProps.children !== this.props.children) {
+      this.children = ReactDOMServer.renderToString(this.props.children);
+      this.infoWindow.setContent(this.children);
+    }
+  };
+
+  renderInfoWindow = () => {
+
+    this.infoWindow = new window.google.maps.InfoWindow();
+    this.infoWindow.marker = this.props.currentMarker;
     this.children = ReactDOMServer.renderToString(this.props.children);
-    this.infoWindow.marker = this.props.marker;
     this.infoWindow.setContent(this.children);
-    this.infoWindow.open(this.props.map, this.props.marker);
+    this.infoWindow.open(this.props.map, this.props.currentMarker);
+
+    this.infoWindow.addListener('closeclick', () => {
+      if (this.infoWindow) {
+        this.infoWindow.marker = null;
+        this.infoWindow.close();
+        this.props.hideInfoWindow();
+        this.infoWindow = null;
+      }
+    });
   };
 
   render() {
@@ -34,9 +52,9 @@ class InfoWindow extends Component {
 };
 
 InfoWindow.propTypes = {
-  marker: PropTypes.object.isRequired,
+  currentMarker: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
-  close: PropTypes.func.isRequired,
+  hideInfoWindow: PropTypes.func.isRequired,
 };
 
 export default InfoWindow;

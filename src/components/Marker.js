@@ -23,11 +23,22 @@ class Marker extends Component {
   * This is for when the user is searching among the markers
   */
   componentWillUnmount = () => {
-    if(this.marker) {
-      // TODO: If infoWindow is open, close it (when searching)
-      this.props.hideInfoWindow();
-      //this.props.setMarker(null);
-      this.marker.setMap(null);
+      //this.marker.setMap(null);
+      if(this.marker) {
+        this.props.removeMarker(this.marker);
+        this.props.hideInfoWindow();
+        this.marker.setMap(null);
+      }
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.map !== prevProps.map || this.props.location !== prevProps.location) {
+      if (this.marker) {
+        this.props.removeMarker(this.marker);
+        this.props.hideInfoWindow();
+        this.marker.setMap(null);
+      }
+      this.renderMarker();
     }
   }
 
@@ -43,10 +54,12 @@ class Marker extends Component {
       dataId: this.props.dataId,
     });
 
-    this.setIcon(this.props.icon);
+
+    //this.setIcon(this.props.icon);
 
     this.props.addMarker(this.marker);
     this.marker.addListener('click', () => {
+      if(this.marker === this.props.currentMarker) return;
       this.props.showInfoWindow(this.marker)
     });
   }
@@ -65,6 +78,10 @@ class Marker extends Component {
   * In this case, nothing needs to be rendered
   */
   render() {
+    if (this.marker === this.props.currentMarker) {
+      //console.log(this.marker);
+
+    }
     return null;
   };
 };
@@ -76,7 +93,6 @@ Marker.propTypes = {
   location: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
   dataId: PropTypes.string.isRequired,
-  setMarker: PropTypes.func.isRequired,
   addMarker: PropTypes.func.isRequired,
 };
 

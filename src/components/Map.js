@@ -23,37 +23,21 @@ class Map extends Component {
 
     this.setState({map: this.map});
     this.setBounds();
+
+    //this.createMarkers();
   };
 
-  componentDidUpdate = (prevProps) => {
-    if (prevProps.marker === this.props.marker) return;
-
-    // TODO: probs can remove this now that marker state is in app
-    // tho still need to get the marker object, if marker was selected from the list
-    // unless I set the icon a different way, in the marker?
-    let activeMarker;
-    if (this.props.marker) {
-      activeMarker = this.markers.filter(
-        marker => marker.dataId === this.props.marker
-      )[0];
-
-    } else {
-      activeMarker = this.state.marker;
-    }
-
-    // TODO: same with this, probs no point setting it here
-    this.props.showInfoWindow(activeMarker);
-  };
-
-  markers = [];
-  addMarker = (marker) => {
-    if (marker) this.markers.push(marker);
-  };
-
-// TODO: Moved over to app, still need a way to set the icon
-  setMarker = marker => {
-    if (this.state.marker) this.setIcon(iconMarker);
-    this.setState({marker: marker});
+  createMarkers = () => {
+    this.props.locations.map(marker => {
+      marker = new window.google.maps.Marker({
+        position: marker.location,
+        map: this.state.map,
+        title: marker.title || '',
+        animation: window.google.maps.Animation.DROP,
+        dataId: marker.id,
+      });
+      //this.props.addMarker(marker);
+    });
   };
 
   setIcon = (icon) => {
@@ -62,19 +46,12 @@ class Map extends Component {
       scaledSize: new window.google.maps.Size(26, 40)
     }
 
-    this.state.marker.setIcon(img);
-  };
-
-  // TODO: Moved this to app, again still need a way to set icon
-  closeInfoWindow = () => {
-    this.setIcon(iconMarker);
-    this.setState({ marker: null });
-    this.props.setMarker('');
+    this.props.currentMarker.setIcon(img);
   };
 
   centerMap = () => {
-    if (this.state.marker) {
-      this.map.setCenter(this.state.marker.position);
+    if (this.props.currentMarker) {
+      this.map.setCenter(this.props.currentMarker.position);
     }
   };
 
@@ -86,34 +63,38 @@ class Map extends Component {
   };
 
   render() {
+    const { map } = this.state;
+    const { filteredLocations, showInfoWindow, hideInfoWindow, addMarker, currentMarker, infoWindow, removeMarker } = this.props;
     this.centerMap();
-    if (this.state.marker) this.setIcon(iconMarkerFocus);
 
     return (
       <div id="map" ref="map" role="application">
-        {this.state.map && (
+        {map && (
           <div className="markers">
-            {this.props.locations.map(marker => (
+            {filteredLocations.map(marker => (
               <Marker
                 key={marker.id}
                 location={marker.position}
                 title={marker.name}
-                map={this.state.map}
-                showInfoWindow={this.props.showInfoWindow}
-                addMarker={this.addMarker}
+                map={map}
+                showInfoWindow={showInfoWindow}
+                hideInfoWindow={hideInfoWindow}
+                addMarker={addMarker}
+                removeMarker={removeMarker}
                 dataId={marker.id}
-                icon={iconMarker}
+                currentMarker={currentMarker}
               />
             ))}
           </div>
         )}
-        {this.state.marker && (
+        {currentMarker && (
             <InfoWindow
-            marker={this.state.marker}
-              map={this.state.map}
-              close={this.props.hideInfoWindow}
+              currentMarker={currentMarker}
+              map={map}
+              infoWindow={infoWindow}
+              hideInfoWindow={hideInfoWindow}
             >
-            <div>{this.state.marker.title}</div>
+            <div>{currentMarker.title}</div>
             </InfoWindow>
         )}
       </div>
@@ -124,7 +105,7 @@ class Map extends Component {
 Map.propTypes = {
   settings: PropTypes.object.isRequired,
   locations: PropTypes.array.isRequired,
-  marker: PropTypes.string,
+  currentMarker: PropTypes.object,
 };
 
 export default Map;

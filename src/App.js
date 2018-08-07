@@ -15,10 +15,13 @@ class App extends Component {
       zoom: 8,
     },
     locations: data,
+    filteredLocations: data,
     query: '',
-    marker: null,
+    currentMarker: null,
     infoWindow: false,
   };
+
+  markers = [];
 
   componentDidMount = () => {
     GoogleAPI.load()
@@ -30,47 +33,71 @@ class App extends Component {
       });
   };
 
-  handleSearch = (event) => {
-    const query = event.target.value;
-    this.setState({ query: query.trim(), marker: '' });
+  addMarker = (marker) => {
+    if (marker) this.markers.push(marker);
+  };
+  removeMarker = (marker) => {
+    if (marker) this.markers.filter(m => m !== marker);
+  };
+
+  // TODO: Could I just send the id, then do a check in Marker.js if id's match?
+  findMarker = (id) => {
+    const activeMarker = this.markers.filter(marker => marker.dataId === id)[0];
+    this.showInfoWindow(activeMarker);
   };
 
   showInfoWindow = (marker) => {
-    this.setState({marker: marker, infoWindow: true});
+    if (marker === this.state.currentMarker) return;
+    this.setState({currentMarker: marker, infoWindow: true});
   };
-  
+
   hideInfoWindow = () => {
-    this.setState({marker: null, infoWindow: false});
+    this.setState({currentMarker: null, infoWindow: false});
   };
 
-  render() {
-    const { locations, query } = this.state;
-    let showingMarkers;
+  handleSearch = (event) => {
+    const query = event.target.value;
+    this.setState({ query: query.trim() });
+    this.filterLocations();
+  };
 
-    console.log(this.state.marker);
+  filterLocations() {
+    const { locations, query, isAPILoaded } = this.state;
+    let filtered;
 
-    if (query) {
+    if (query && isAPILoaded) {
       // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
       const escapeString = query.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&');
       const match = new RegExp(escapeString, 'i');
-      showingMarkers = locations.filter((location) => match.test(location.name));
+      filtered = locations.filter((location) => match.test(location.name));
     } else {
-      showingMarkers = locations;
+      filtered = locations;
     }
+
+    return filtered;
+  }
+
+  render() {
+    const { query, isAPILoaded, settings, currentMarker, infoWindow, locations } = this.state;
+    const filteredLocations = this.filterLocations();
+    console.log(this.markers);
 
     return (
       <div className="App">
 
         <header>
           {/* TODO: Add form, label, accessible */}
-            <input name="search" type="text" placeholder="Search..." value={this.state.query} onChange={this.handleSearch} />
+            <input name="search" type="text" placeholder="Search..." value={query} onChange={this.handleSearch} />
         </header>
-        { this.state.isAPILoaded && (
+        { isAPILoaded && (
           <Map
-            settings={this.state.settings}
-            locations={showingMarkers}
-            marker={this.state.marker}
-            infoWindow={this.state.infoWindow}
+            settings={settings}
+            locations={locations}
+            filteredLocations={filteredLocations}
+            addMarker={this.addMarker}
+            removeMarker={this.removeMarker}
+            currentMarker={currentMarker}
+            infoWindow={infoWindow}
             showInfoWindow={this.showInfoWindow}
             hideInfoWindow={this.hideInfoWindow}
             />
@@ -80,11 +107,11 @@ class App extends Component {
         <nav>
           {/* TODO: button to show/hide locations */}
           <ul className="locations">
-            {showingMarkers.map(marker => (
+            {filteredLocations.map(marker => (
               <li
                 key={marker.id} className="location">
                 {/* TODO: Move to component? */}
-                  <button onClick={() => {this.showInfoWindow(marker.id)}}>{marker.name}</button>
+                  <button onClick={() => {this.findMarker(marker.id)}}>{marker.name}</button>
               </li>
             ))}
           </ul>
