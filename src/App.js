@@ -8,6 +8,7 @@ import './App.css';
 class App extends Component {
   state = {
     isAPILoaded: false,
+    isDataLoaded: false,
     settings: {
       center: { lat: 59.9139, lng: 10.7522 },
       zoom: 8,
@@ -71,23 +72,44 @@ class App extends Component {
   loadAPIS = () => {
     GoogleAPI.load()
       .then(() => {
-        this.setState({ isAPILoaded: true });
+        //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
+        let promises = this.state.locations.map(location => this.fetchLocationData(`${location.position.lat},${location.position.lng}`));
+
+        return Promise.all(promises)
+          .then(function (responses) {
+            // todo: do something with the data
+            console.log(responses);
+          });
       })
-      .catch(() => {
-        this.setState({ isAPILoaded: false });
+      .then(() => {
+        this.setState({ isAPILoaded: true, isDataLoaded: true });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({ isAPILoaded: false, isDataLoaded: false });
       });
-  }
+  };
+
+  fetchLocationData = (location) => {
+    const url = 'https://api.foursquare.com/v2/venues/explore';
+    const client_id = 'VLYXZK00M53WWOEMPTSFOHD0AF0KYGDRTS0GOPCDQ5OGTGW0';
+    const client_secret = '5O3AKQS3MXFSO2H1GR3AG5BKN3IUD3SJ1GCSNGB5AR21EVLQ';
+    return fetch(`${url}?client_id=${client_id}&client_secret=${client_secret}&v=20180323&ll=${location}&limit=5`)
+      .then(response => response.json()) // parses response to JSON
+      .catch(error => console.error(`Fetch Error =\n`, error));
+  };
 
   render() {
-    console.log(this.markers);
-    const { query, isAPILoaded, settings, currentMarker, infoWindow, locations } = this.state;
+    const { query, isAPILoaded, isDataLoaded, settings, currentMarker, infoWindow, locations } = this.state;
     const filteredLocations = this.filterLocations();
 
-    if (this.state.isAPILoaded === false) {
+    if (isAPILoaded === false) {
       setTimeout(() => {
         this.loadAPIS();
       }, 0);
     }
+
+    console.log(isDataLoaded);
 
     return (
       <div className="App">
@@ -95,7 +117,7 @@ class App extends Component {
           {/* TODO: Add form, label, accessible */}
             <input name="search" type="text" placeholder="Search..." value={query} onChange={this.handleSearch} />
         </header>
-        { isAPILoaded && (
+        { isAPILoaded && isDataLoaded && (
           <Map
             settings={settings}
             locations={locations}
@@ -108,7 +130,7 @@ class App extends Component {
             hideInfoWindow={this.hideInfoWindow}
             />
         )}
-        {isAPILoaded && (
+        {isAPILoaded && isDataLoaded && (
           <nav>
             <ul className="locations">
               {filteredLocations.map(marker => (

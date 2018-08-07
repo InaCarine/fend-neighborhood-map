@@ -35,6 +35,10 @@ class Marker extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.currentMarker && this.marker.id === this.props.currentMarker.id) {
       this.setIcon(iconMarkerFocus);
+      this.marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      setTimeout(() => {
+        this.marker.setAnimation(null);
+      }, 400);
     } else {
       this.setIcon(iconMarker);
     }
