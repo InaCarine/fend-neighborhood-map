@@ -29,7 +29,6 @@ class InfoWindow extends Component {
   };
 
   renderInfoWindow = () => {
-
     this.infoWindow = new window.google.maps.InfoWindow();
     this.infoWindow.marker = this.props.currentMarker;
     this.children = ReactDOMServer.renderToString(this.props.children);

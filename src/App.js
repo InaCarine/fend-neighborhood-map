@@ -5,8 +5,6 @@ import * as data from './data/locations.json';
 
 import './App.css';
 
-// TODO: Add error window
-
 class App extends Component {
   state = {
     isAPILoaded: false,
@@ -22,27 +20,19 @@ class App extends Component {
   };
 
   markers = [];
-
-  componentDidMount = () => {
-    GoogleAPI.load()
-      .then(() => {
-        this.setState({ isAPILoaded: true });
-      })
-      .catch((error) => {
-        alert(`Oops, something went wrong when trying to load: ${error.target.src}`)
-      });
-  };
-
   addMarker = (marker) => {
     if (marker) this.markers.push(marker);
   };
+
   removeMarker = (marker) => {
-    if (marker) this.markers.filter(m => m !== marker);
+    if (marker) {
+      const updatedMarkers = this.markers.filter(m => m.id !== marker.id);
+      this.markers = updatedMarkers;
+    }
   };
 
-  // TODO: Could I just send the id, then do a check in Marker.js if id's match?
   findMarker = (id) => {
-    const activeMarker = this.markers.filter(marker => marker.dataId === id)[0];
+    const activeMarker = this.markers.filter(marker => marker.id === id)[0];
     this.showInfoWindow(activeMarker);
   };
 
@@ -77,14 +67,30 @@ class App extends Component {
     return filtered;
   }
 
+  //https://stackoverflow.com/questions/42847126/script-load-in-react
+  loadAPIS = () => {
+    GoogleAPI.load()
+      .then(() => {
+        this.setState({ isAPILoaded: true });
+      })
+      .catch(() => {
+        this.setState({ isAPILoaded: false });
+      });
+  }
+
   render() {
+    console.log(this.markers);
     const { query, isAPILoaded, settings, currentMarker, infoWindow, locations } = this.state;
     const filteredLocations = this.filterLocations();
-    console.log(this.markers);
+
+    if (this.state.isAPILoaded === false) {
+      setTimeout(() => {
+        this.loadAPIS();
+      }, 0);
+    }
 
     return (
       <div className="App">
-
         <header>
           {/* TODO: Add form, label, accessible */}
             <input name="search" type="text" placeholder="Search..." value={query} onChange={this.handleSearch} />
@@ -102,21 +108,18 @@ class App extends Component {
             hideInfoWindow={this.hideInfoWindow}
             />
         )}
-
-        {/* TODO: Move to a new component? */}
-        <nav>
-          {/* TODO: button to show/hide locations */}
-          <ul className="locations">
-            {filteredLocations.map(marker => (
-              <li
-                key={marker.id} className="location">
-                {/* TODO: Move to component? */}
-                  <button onClick={() => {this.findMarker(marker.id)}}>{marker.name}</button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
+        {isAPILoaded && (
+          <nav>
+            <ul className="locations">
+              {filteredLocations.map(marker => (
+                <li
+                  key={marker.id} className="location">
+                    <button onClick={() => {this.findMarker(marker.id)}}>{marker.name}</button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
       </div>
     );
   }

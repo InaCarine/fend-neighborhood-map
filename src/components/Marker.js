@@ -1,13 +1,14 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import iconMarker from '../img/icon-marker.png';
+import iconMarkerFocus from '../img/icon-marker-focus.png';
 // TODO: If no state, might be able to change this to stateless function
 
 /*
 * @description: A google marker component
 * methods: componentDidMount, componentWillUnmount, render, renderMarker
 * props: location {Object}, map {Object}, title {String},
-*        setMarker {func}, addMarker {func}, dataId {String}
+*        setMarker {func}, addMarker {func}, id {String}
 */
 class Marker extends Component {
   /*
@@ -32,6 +33,12 @@ class Marker extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    if (this.props.currentMarker && this.marker.id === this.props.currentMarker.id) {
+      this.setIcon(iconMarkerFocus);
+    } else {
+      this.setIcon(iconMarker);
+    }
+
     if (this.props.map !== prevProps.map || this.props.location !== prevProps.location) {
       if (this.marker) {
         this.props.removeMarker(this.marker);
@@ -51,17 +58,16 @@ class Marker extends Component {
       map: this.props.map,
       title: this.props.title || '',
       animation: window.google.maps.Animation.DROP,
-      dataId: this.props.dataId,
+      id: this.props.id,
     });
-
-
-    //this.setIcon(this.props.icon);
 
     this.props.addMarker(this.marker);
     this.marker.addListener('click', () => {
-      if(this.marker === this.props.currentMarker) return;
+      if (this.props.currentMarker && this.marker.id === this.props.currentMarker.id) return;
       this.props.showInfoWindow(this.marker)
     });
+
+    this.setIcon(iconMarker);
   }
 
   setIcon = (icon) => {
@@ -78,10 +84,6 @@ class Marker extends Component {
   * In this case, nothing needs to be rendered
   */
   render() {
-    if (this.marker === this.props.currentMarker) {
-      //console.log(this.marker);
-
-    }
     return null;
   };
 };
@@ -92,7 +94,7 @@ class Marker extends Component {
 Marker.propTypes = {
   location: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
-  dataId: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   addMarker: PropTypes.func.isRequired,
 };
 

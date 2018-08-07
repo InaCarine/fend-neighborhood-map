@@ -3,9 +3,6 @@ import Marker from './Marker';
 import InfoWindow from './InfoWindow';
 import PropTypes from 'prop-types';
 
-import iconMarker from '../img/icon-marker.png';
-import iconMarkerFocus from '../img/icon-marker-focus.png';
-
 class Map extends Component {
   state = {
     map: null,
@@ -23,30 +20,6 @@ class Map extends Component {
 
     this.setState({map: this.map});
     this.setBounds();
-
-    //this.createMarkers();
-  };
-
-  createMarkers = () => {
-    this.props.locations.map(marker => {
-      marker = new window.google.maps.Marker({
-        position: marker.location,
-        map: this.state.map,
-        title: marker.title || '',
-        animation: window.google.maps.Animation.DROP,
-        dataId: marker.id,
-      });
-      //this.props.addMarker(marker);
-    });
-  };
-
-  setIcon = (icon) => {
-    const img = {
-      url: icon,
-      scaledSize: new window.google.maps.Size(26, 40)
-    }
-
-    this.props.currentMarker.setIcon(img);
   };
 
   centerMap = () => {
@@ -81,7 +54,7 @@ class Map extends Component {
                 hideInfoWindow={hideInfoWindow}
                 addMarker={addMarker}
                 removeMarker={removeMarker}
-                dataId={marker.id}
+                id={marker.id}
                 currentMarker={currentMarker}
               />
             ))}
