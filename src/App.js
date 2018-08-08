@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Map from './components/Map';
 import Header from './components/Header';
+import ListLocations from './components/ListLocations';
 import * as GoogleAPI from './utils/GoogleAPI';
 import * as data from './data/locations.json';
 
@@ -129,16 +130,7 @@ class App extends Component {
             />
         )}
         {isAPILoaded && isDataLoaded && (
-          <nav>
-            <ul className="locations">
-              {filteredLocations.map(marker => (
-                <li
-                  key={marker.id} className="location">
-                    <button onClick={() => {this.findMarker(marker.id)}}>{marker.name}</button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
         )}
       </div>
     );
