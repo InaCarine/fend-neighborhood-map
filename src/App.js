@@ -9,8 +9,8 @@ import './App.css';
 
 class App extends Component {
   state = {
-    isAPILoaded: false,
-    isDataLoaded: false,
+    isAPILoaded: 'false',
+    isDataLoaded: 'false',
     settings: {
       center: { lat: 59.9139, lng: 10.7522 },
       zoom: 8,
@@ -58,7 +58,7 @@ class App extends Component {
     const { locations, query, isAPILoaded } = this.state;
     let filtered;
 
-    if (query && isAPILoaded) {
+    if (query && isAPILoaded === 'true') {
       // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
       const escapeString = query.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&');
       const match = new RegExp(escapeString, 'i');
@@ -72,6 +72,7 @@ class App extends Component {
 
   //https://stackoverflow.com/questions/42847126/script-load-in-react
   loadAPIS = () => {
+    //this.setState({ isAPILoaded: 'loading', isDataLoaded: 'loading' });
     GoogleAPI.load()
       .then(() => {
         //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
@@ -84,11 +85,11 @@ class App extends Component {
         //   });
       })
       .then(() => {
-        this.setState({ isAPILoaded: true, isDataLoaded: true });
+        this.setState({ isAPILoaded: 'true', isDataLoaded: 'true' });
       })
       .catch((error) => {
         console.log(error);
-        this.setState({ isAPILoaded: false, isDataLoaded: false });
+        this.setState({ isAPILoaded: 'false', isDataLoaded: 'false' });
       });
   };
 
@@ -104,8 +105,9 @@ class App extends Component {
   render() {
     const { query, isAPILoaded, isDataLoaded, settings, currentMarker, infoWindow, locations } = this.state;
     const filteredLocations = this.filterLocations();
+    const isAPIsLoaded = isAPILoaded === 'true' && isDataLoaded === 'true';
 
-    if (isAPILoaded === false) {
+    if (isAPILoaded === 'false') {
       setTimeout(() => {
         this.loadAPIS();
       }, 0);
@@ -116,10 +118,10 @@ class App extends Component {
     return (
       <div className="App">
         <Header query={query} handleSearch={this.handleSearch} />
-        {isAPILoaded && isDataLoaded && (
+        {isAPIsLoaded && (
           <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
         )}
-        { isAPILoaded && isDataLoaded && (
+        {isAPIsLoaded && (
           <Map
             settings={settings}
             locations={locations}

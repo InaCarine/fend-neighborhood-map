@@ -6,11 +6,13 @@ import PropTypes from 'prop-types';
 * props: filteredLocations {Array}, findMarker {func}
 */
 const ListLocations = ({ filteredLocations, findMarker }) => {
+
   const toggleLocations = event => {
     const button = event.target;
     const expanded = button.getAttribute('aria-expanded') === 'true';
 
     button.setAttribute('aria-expanded', !expanded);
+    document.querySelector('.location button').setAttribute('tabindex', 0 );
     button.nextSibling.classList.toggle('open');
   };
 
@@ -18,16 +20,17 @@ const ListLocations = ({ filteredLocations, findMarker }) => {
     console.log(marker);
     findMarker(marker);
     document.querySelector('.btn-locations').setAttribute('aria-expanded', false);
+    document.querySelector('.location button').setAttribute('tabindex', -1);
     document.querySelector('.locations').classList.remove('open');
   }
 
   return (
     <nav className="nav-locations">
       <button aria-expanded="false" className="btn-locations" onClick={toggleLocations}><span className="visually-hidden">View locations</span></button>
-      <ul hidden className="locations">
+      <ul className="locations">
         {filteredLocations.map(marker => (
           <li key={marker.id} className="location">
-            <button onClick={() => { closeLocations(marker.id) }}>{marker.name}</button>
+            <button tabIndex="-1" onClick={() => { closeLocations(marker.id) }}>{marker.name}</button>
           </li>
         ))}
       </ul>

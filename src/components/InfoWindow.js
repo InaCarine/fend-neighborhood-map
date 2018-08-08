@@ -1,6 +1,7 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import ReactDOMServer from "react-dom/server";
 import PropTypes from 'prop-types';
+import osloIMG from '../img/tmp.jpg';
 
 class InfoWindow extends Component {
   componentDidMount = () => {
@@ -46,7 +47,37 @@ class InfoWindow extends Component {
   };
 
   render() {
-    return null;
+    let localTime = new Date().toLocaleTimeString("en-GB", { timeZone: "Europe/Oslo", hour: '2-digit', minute: '2-digit' });
+
+    return (
+      <div className="location-info">
+        <div className="location-info-wrapper">
+        {/* TODO: Change focus to this when open? */}
+          <div className="location-info__header" aria-label="Location information" tabIndex="-1">
+          {/* // TODO: set alt */}
+
+            <div className="location-info__title">
+              <h2>
+                {this.props.children}
+                <span className="country">Norway</span>
+              </h2>
+              <span className="time">{localTime}</span>
+              {/* TODO: Move close infoindow stuff to a function */}
+              <button className="close"><span className="visually-hidden">Close location info</span><span aria-hidden="true">X</span></button>
+            </div>
+            <img src={osloIMG} alt="" />
+          </div>
+
+          <div className="location-info__content">
+            <h3 className="location-info__content-title">Venues</h3>
+            <div className="location-info__venue">
+              <img src={osloIMG} alt="" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    )
   };
 };
 
