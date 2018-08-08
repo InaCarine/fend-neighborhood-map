@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Map from './components/Map';
+import Header from './components/Header';
 import * as GoogleAPI from './utils/GoogleAPI';
 import * as data from './data/locations.json';
 
@@ -73,13 +74,13 @@ class App extends Component {
     GoogleAPI.load()
       .then(() => {
         //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
-        let promises = this.state.locations.map(location => this.fetchLocationData(`${location.position.lat},${location.position.lng}`));
+        // let promises = this.state.locations.map(location => this.fetchLocationData(`${location.position.lat},${location.position.lng}`));
 
-        return Promise.all(promises)
-          .then(function (responses) {
-            // todo: do something with the data
-            console.log(responses);
-          });
+        // return Promise.all(promises)
+        //   .then(function (responses) {
+        //     // todo: do something with the data
+        //     console.log(responses);
+        //   });
       })
       .then(() => {
         this.setState({ isAPILoaded: true, isDataLoaded: true });
@@ -113,10 +114,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <header>
-          {/* TODO: Add form, label, accessible */}
-            <input name="search" type="text" placeholder="Search..." value={query} onChange={this.handleSearch} />
-        </header>
+        <Header query={query} handleSearch={this.handleSearch} />
         { isAPILoaded && isDataLoaded && (
           <Map
             settings={settings}
