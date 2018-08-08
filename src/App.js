@@ -116,6 +116,9 @@ class App extends Component {
     return (
       <div className="App">
         <Header query={query} handleSearch={this.handleSearch} />
+        {isAPILoaded && isDataLoaded && (
+          <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
+        )}
         { isAPILoaded && isDataLoaded && (
           <Map
             settings={settings}
@@ -128,9 +131,6 @@ class App extends Component {
             showInfoWindow={this.showInfoWindow}
             hideInfoWindow={this.hideInfoWindow}
             />
-        )}
-        {isAPILoaded && isDataLoaded && (
-          <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
         )}
       </div>
     );

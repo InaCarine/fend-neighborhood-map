@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Marker from './Marker';
 import InfoWindow from './InfoWindow';
 import PropTypes from 'prop-types';
@@ -13,6 +13,9 @@ class Map extends Component {
       center: this.props.settings.center,
       zoom: this.props.settings.zoom,
       zoomControl: true,
+      zoomControlOptions: {
+        position: window.google.maps.ControlPosition.LEFT_BOTTOM
+      },
       mapTypeControl: false,
       streetViewControl: true,
       fullscreenControl: false
@@ -43,7 +46,7 @@ class Map extends Component {
     return (
       <div id="map" ref="map" role="application">
         {map && (
-          <div className="markers">
+          <Fragment>
             {filteredLocations.map(marker => (
               <Marker
                 key={marker.id}
@@ -58,7 +61,7 @@ class Map extends Component {
                 currentMarker={currentMarker}
               />
             ))}
-          </div>
+          </Fragment>
         )}
         {currentMarker && (
             <InfoWindow
