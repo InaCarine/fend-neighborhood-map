@@ -50,8 +50,7 @@ class Map extends Component {
             {filteredLocations.map(marker => (
               <Marker
                 key={marker.id}
-                location={marker.position}
-                title={marker.name}
+                marker={marker}
                 map={map}
                 showInfoWindow={showInfoWindow}
                 hideInfoWindow={hideInfoWindow}

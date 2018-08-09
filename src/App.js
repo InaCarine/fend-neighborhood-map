@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Map from './components/Map';
 import Header from './components/Header';
 import ListLocations from './components/ListLocations';
+
 import * as GoogleAPI from './utils/GoogleAPI';
 import * as data from './data/locations.json';
 
@@ -76,13 +77,9 @@ class App extends Component {
     GoogleAPI.load()
       .then(() => {
         //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
-        // let promises = this.state.locations.map(location => this.fetchLocationData(`${location.position.lat},${location.position.lng}`));
+        let promises = this.state.locations.map(location => this.fetchLocationData(`${location.position.lat},${location.position.lng}`, location));
 
-        // return Promise.all(promises)
-        //   .then(function (responses) {
-        //     // todo: do something with the data
-        //     console.log(responses);
-        //   });
+        return Promise.all(promises);
       })
       .then(() => {
         this.setState({ isAPILoaded: 'true', isDataLoaded: 'true' });
@@ -93,12 +90,15 @@ class App extends Component {
       });
   };
 
-  fetchLocationData = (location) => {
+  fetchLocationData = (position, location) => {
     const url = 'https://api.foursquare.com/v2/venues/explore';
     const client_id = 'VLYXZK00M53WWOEMPTSFOHD0AF0KYGDRTS0GOPCDQ5OGTGW0';
     const client_secret = '5O3AKQS3MXFSO2H1GR3AG5BKN3IUD3SJ1GCSNGB5AR21EVLQ';
-    return fetch(`${url}?client_id=${client_id}&client_secret=${client_secret}&v=20180323&ll=${location}&limit=5`)
+    return fetch(`${url}?client_id=${client_id}&client_secret=${client_secret}&v=20180323&ll=${position}&limit=5`)
       .then(response => response.json()) // parses response to JSON
+      .then(data => {
+        location.venues = data.response.groups[0].items;
+      })
       .catch(error => console.error(`Fetch Error =\n`, error));
   };
 
@@ -112,8 +112,6 @@ class App extends Component {
         this.loadAPIS();
       }, 0);
     }
-
-    console.log(isDataLoaded);
 
     return (
       <div className="App">

@@ -9,12 +9,7 @@ class InfoWindow extends Component {
   };
 
   componentWillUnmount = () => {
-    if (this.infoWindow) {
-      this.infoWindow.marker = null;
-      this.infoWindow.close();
-      this.infoWindow = null;
-      this.props.hideInfoWindow();
-    }
+    this.closeWindow();
   }
 
   componentDidUpdate = (prevProps) => {
@@ -37,13 +32,17 @@ class InfoWindow extends Component {
     this.infoWindow.open(this.props.map, this.props.currentMarker);
 
     this.infoWindow.addListener('closeclick', () => {
-      if (this.infoWindow) {
-        this.infoWindow.marker = null;
-        this.infoWindow.close();
-        this.props.hideInfoWindow();
-        this.infoWindow = null;
-      }
+      this.closeWindow();
     });
+  };
+
+  closeWindow = () => {
+    if (this.infoWindow) {
+      this.infoWindow.marker = null;
+      this.infoWindow.close();
+      this.props.hideInfoWindow();
+      this.infoWindow = null;
+    }
   };
 
   render() {
@@ -63,15 +62,26 @@ class InfoWindow extends Component {
               </h2>
               <span className="time">{localTime}</span>
               {/* TODO: Move close infoindow stuff to a function */}
-              <button className="close"><span className="visually-hidden">Close location info</span><span aria-hidden="true">X</span></button>
+              <button onClick={this.closeWindow} className="close"><span className="visually-hidden">Close location info</span><span aria-hidden="true">X</span></button>
             </div>
-            <img src={osloIMG} alt="" />
+            <img src={this.props.currentMarker.photo} alt="" />
           </div>
 
           <div className="location-info__content">
             <h3 className="location-info__content-title">Venues</h3>
             <div className="location-info__venue">
-              <img src={osloIMG} alt="" />
+              <img className="venue__img" src={osloIMG} alt="" />
+              <h4 className="venue__name">Egon</h4>
+            </div>
+
+            <div className="location-info__venue">
+              <img className="venue__img" src={osloIMG} alt="" />
+              <h4 className="venue__name">Egon</h4>
+            </div>
+
+            <div className="location-info__venue">
+              <img className="venue__img" src={osloIMG} alt="" />
+              <h4 className="venue__name">Egon</h4>
             </div>
           </div>
 

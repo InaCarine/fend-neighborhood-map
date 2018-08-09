@@ -43,7 +43,7 @@ class Marker extends Component {
       this.setIcon(iconMarker);
     }
 
-    if (this.props.map !== prevProps.map || this.props.location !== prevProps.location) {
+    if (this.props.map !== prevProps.map || this.props.marker.position !== prevProps.marker.position) {
       if (this.marker) {
         this.props.removeMarker(this.marker);
         this.props.hideInfoWindow();
@@ -58,11 +58,12 @@ class Marker extends Component {
   */
   renderMarker = () => {
     this.marker = new window.google.maps.Marker({
-      position: this.props.location,
+      position: this.props.marker.position,
       map: this.props.map,
-      title: this.props.title || '',
+      title: this.props.marker.name || '',
       animation: window.google.maps.Animation.DROP,
-      id: this.props.id,
+      id: this.props.marker.id,
+      photo: this.props.marker.photo
     });
 
     this.props.addMarker(this.marker);
@@ -96,9 +97,8 @@ class Marker extends Component {
 * @description: The required props for the component
 */
 Marker.propTypes = {
-  location: PropTypes.object.isRequired,
+  marker: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
-  id: PropTypes.string.isRequired,
   addMarker: PropTypes.func.isRequired,
 };
 
