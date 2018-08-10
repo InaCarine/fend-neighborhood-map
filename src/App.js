@@ -10,8 +10,9 @@ import './App.css';
 
 class App extends Component {
   state = {
-    isAPILoaded: 'false',
-    isDataLoaded: 'false',
+    isAPILoaded: false,
+    isDataLoaded: false,
+    error: null,
     settings: {
       center: { lat: 59.9139, lng: 10.7522 },
       zoom: 8,
@@ -21,6 +22,13 @@ class App extends Component {
     query: '',
     currentMarker: null,
     infoWindow: false,
+  };
+
+  componentDidMount = () => {
+    if(!this.state.isDataLoaded && !this.state.isAPILoaded) {
+      this.loadMap();
+      this.addVenues();
+    }
   };
 
   markers = [];
@@ -71,55 +79,54 @@ class App extends Component {
     return filtered;
   }
 
-  //https://stackoverflow.com/questions/42847126/script-load-in-react
-  loadAPIS = () => {
-    //this.setState({ isAPILoaded: 'loading', isDataLoaded: 'loading' });
+  loadMap = () => {
     GoogleAPI.load()
       .then(() => {
-        //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
-        let promises = this.state.locations.map(location => this.fetchLocationData(`${location.position.lat},${location.position.lng}`, location));
-
-        return Promise.all(promises);
+        this.setState({ isAPILoaded: true });
       })
-      .then(() => {
-        this.setState({ isAPILoaded: 'true', isDataLoaded: 'true' });
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ isAPILoaded: 'false', isDataLoaded: 'false' });
+      .catch(error => {
+        this.setState({ isAPILoaded: 'false', error: error });
       });
   };
 
-  fetchLocationData = (position, location) => {
+  //https://stackoverflow.com/questions/42847126/script-load-in-react
+  //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
+  addVenues = () => {
+    var promises = this.state.locations.map(location => {
+      return this.fetchLocationData(`${location.position.lat},${location.position.lng}`).then(data => {
+        location.venues = data.response.groups[0].items;
+        return data;
+      });
+    });
+
+    return Promise.all(promises)
+      .then(() => {
+        this.setState({ isDataLoaded: true });
+      })
+      .catch(function (error) {
+        this.setState({ isDataLoaded: false, error: error });
+      });
+  };
+
+  fetchLocationData = (position) => {
     const url = 'https://api.foursquare.com/v2/venues/explore';
     const client_id = 'VLYXZK00M53WWOEMPTSFOHD0AF0KYGDRTS0GOPCDQ5OGTGW0';
     const client_secret = '5O3AKQS3MXFSO2H1GR3AG5BKN3IUD3SJ1GCSNGB5AR21EVLQ';
-    return fetch(`${url}?client_id=${client_id}&client_secret=${client_secret}&v=20180323&ll=${position}&limit=5`)
-      .then(response => response.json()) // parses response to JSON
-      .then(data => {
-        location.venues = data.response.groups[0].items;
-      })
-      .catch(error => console.error(`Fetch Error =\n`, error));
+    return fetch(`${url}?client_id=${client_id}&client_secret=${client_secret}&v=20180323&ll=${position}&limit=3`)
+      .then(response => response.json());
   };
 
   render() {
     const { query, isAPILoaded, isDataLoaded, settings, currentMarker, infoWindow, locations } = this.state;
     const filteredLocations = this.filterLocations();
-    const isAPIsLoaded = isAPILoaded === 'true' && isDataLoaded === 'true';
-
-    if (isAPILoaded === 'false') {
-      setTimeout(() => {
-        this.loadAPIS();
-      }, 0);
-    }
 
     return (
       <div className="App">
         <Header query={query} handleSearch={this.handleSearch} />
-        {isAPIsLoaded && (
+        {isAPILoaded && (
           <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
         )}
-        {isAPIsLoaded && (
+        {isAPILoaded && isDataLoaded && (
           <Map
             settings={settings}
             locations={locations}
