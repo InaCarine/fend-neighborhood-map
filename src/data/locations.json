@@ -6,7 +6,7 @@
       "lat": 59.9139,
       "lng": 10.7522
     },
-    "photo": "https://igx.4sqi.net/img/general/width960/11378796_U-Es5q6RnFoixOowMiKKYvKWpWR8LUzbYF93hFOczaI.jpg"
+    "photo": "//igx.4sqi.net/img/general/width960/11378796_U-Es5q6RnFoixOowMiKKYvKWpWR8LUzbYF93hFOczaI.jpg"
   },
   {
     "id": "trondheim",
@@ -15,7 +15,7 @@
       "lat": 63.4305,
       "lng": 10.3951
     },
-    "photo": "https://igx.4sqi.net/img/general/width960/575261_LeRVZqXcX_PBwioxu3TZ0KsbbSNQI7rTL0XKj-ekaoM.jpg"
+    "photo": "//igx.4sqi.net/img/general/width960/575261_LeRVZqXcX_PBwioxu3TZ0KsbbSNQI7rTL0XKj-ekaoM.jpg"
   },
   {
     "id": "geirangerfjorden",
@@ -24,7 +24,7 @@
       "lat": 62.1015,
       "lng": 7.0941
     },
-    "photo": "https://igx.4sqi.net/img/general/width960/493342581_BrG8e2ENTX_cv_in7Xl4t18562GQArQBZbSgHqKbfFI.jpg"
+    "photo": "//igx.4sqi.net/img/general/width960/493342581_BrG8e2ENTX_cv_in7Xl4t18562GQArQBZbSgHqKbfFI.jpg"
   },
   {
     "id": "bergen",
@@ -33,7 +33,7 @@
       "lat": 60.3913,
       "lng": 5.3221
     },
-    "photo": "https://igx.4sqi.net/img/general/width960/hst9JaUMs0PXqGVDuwhw5sRZ_JwbDZnnE0p10s_xKBk.jpg"
+    "photo": "//igx.4sqi.net/img/general/width960/hst9JaUMs0PXqGVDuwhw5sRZ_JwbDZnnE0p10s_xKBk.jpg"
   },
   {
     "id": "hemsedal",
@@ -42,6 +42,6 @@
       "lat": 60.8601,
       "lng": 8.5179
     },
-    "photo": "https://igx.4sqi.net/img/general/width960/424250__J0MO2E2bE9O2gQG9nB4iry1svTB-8Flfbqv8pqFq0s.jpg"
+    "photo": "//igx.4sqi.net/img/general/width960/424250__J0MO2E2bE9O2gQG9nB4iry1svTB-8Flfbqv8pqFq0s.jpg"
   }
 ]

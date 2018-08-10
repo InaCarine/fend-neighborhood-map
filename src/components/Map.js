@@ -56,7 +56,6 @@ class Map extends Component {
                 hideInfoWindow={hideInfoWindow}
                 addMarker={addMarker}
                 removeMarker={removeMarker}
-                id={marker.id}
                 currentMarker={currentMarker}
               />
             ))}
@@ -69,7 +68,6 @@ class Map extends Component {
               infoWindow={infoWindow}
               hideInfoWindow={hideInfoWindow}
             >
-            <div>{currentMarker.title}</div>
             </InfoWindow>
         )}
       </div>

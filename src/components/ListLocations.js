@@ -4,23 +4,37 @@ import PropTypes from 'prop-types';
 /*
 * @description: List of the available locations
 * props: filteredLocations {Array}, findMarker {func}
+* methods: toggleLocations, closeLocations
 */
 const ListLocations = ({ filteredLocations, findMarker }) => {
 
+  /*
+  * @description: Click event for toggling the location list.
+  * Toggle tabindex to make it non-focusable when off screen
+  */
   const toggleLocations = event => {
     const button = event.target;
     const expanded = button.getAttribute('aria-expanded') === 'true';
 
+    const locButtons = document.querySelectorAll('.location button');
+    for (const locButton of locButtons) {
+      locButton.setAttribute('tabindex', !expanded ? 0 : -1);
+    }
+
     button.setAttribute('aria-expanded', !expanded);
-    document.querySelector('.location button').setAttribute('tabindex', 0 );
     button.nextSibling.classList.toggle('open');
   };
 
+  /*
+  * @description: Close the location list when one of the locations are selected
+  */
   const closeLocations = (marker) => {
-    console.log(marker);
     findMarker(marker);
     document.querySelector('.btn-locations').setAttribute('aria-expanded', false);
-    document.querySelector('.location button').setAttribute('tabindex', -1);
+    const locButtons = document.querySelectorAll('.location button');
+    for (const locButton of locButtons) {
+      locButton.setAttribute('tabindex', -1);
+    }
     document.querySelector('.locations').classList.remove('open');
   }
 

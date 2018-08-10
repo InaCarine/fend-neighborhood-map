@@ -2,18 +2,15 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import iconMarker from '../img/icon-marker.png';
 import iconMarkerFocus from '../img/icon-marker-focus.png';
-// TODO: If no state, might be able to change this to stateless function
 
 /*
 * @description: A google marker component
-* methods: componentDidMount, componentWillUnmount, render, renderMarker
-* props: location {Object}, map {Object}, title {String},
-*        setMarker {func}, addMarker {func}, id {String}
+* methods: componentDidMount, componentWillUnmount, renderMarker, setIcon, render
+* props: marker {Object}, map {Object}, showInfoWindow {func}, hideInfoWindow {func}
+*        removeMarker {func}, addMarker {func}, id {String}, currentMarker {Object}
 */
 class Marker extends Component {
-  /*
-  * @description: Called after component have mounted
-  */
+
   componentDidMount = () => {
     this.renderMarker();
   };
@@ -24,7 +21,6 @@ class Marker extends Component {
   * This is for when the user is searching among the markers
   */
   componentWillUnmount = () => {
-      //this.marker.setMap(null);
       if(this.marker) {
         this.props.removeMarker(this.marker);
         this.props.hideInfoWindow();
@@ -36,6 +32,7 @@ class Marker extends Component {
     if (this.props.currentMarker && this.marker.id === this.props.currentMarker.id) {
       this.setIcon(iconMarkerFocus);
       this.marker.setAnimation(window.google.maps.Animation.BOUNCE);
+
       setTimeout(() => {
         this.marker.setAnimation(null);
       }, 400);
@@ -63,7 +60,8 @@ class Marker extends Component {
       title: this.props.marker.name || '',
       animation: window.google.maps.Animation.DROP,
       id: this.props.marker.id,
-      photo: this.props.marker.photo
+      photo: this.props.marker.photo,
+      venues: this.props.marker.venues
     });
 
     this.props.addMarker(this.marker);
@@ -84,18 +82,11 @@ class Marker extends Component {
     this.marker.setIcon(img);
   }
 
-  /*
-  * @description: renders the component
-  * In this case, nothing needs to be rendered
-  */
   render() {
     return null;
   };
 };
 
-/*
-* @description: The required props for the component
-*/
 Marker.propTypes = {
   marker: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,

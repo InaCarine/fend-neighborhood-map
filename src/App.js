@@ -67,7 +67,7 @@ class App extends Component {
     const { locations, query, isAPILoaded } = this.state;
     let filtered;
 
-    if (query && isAPILoaded === 'true') {
+    if (query && isAPILoaded === true) {
       // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
       const escapeString = query.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&');
       const match = new RegExp(escapeString, 'i');
@@ -85,7 +85,7 @@ class App extends Component {
         this.setState({ isAPILoaded: true });
       })
       .catch(error => {
-        this.setState({ isAPILoaded: 'false', error: error });
+        this.setState({ isAPILoaded: false, error: error });
       });
   };
 
