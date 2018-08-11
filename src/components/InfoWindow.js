@@ -1,27 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+/*
+* description: Info window for the selected marker
+* methods: closeWindow
+*/
 class InfoWindow extends Component {
   componentDidMount = () => {
-    this.renderInfoWindow();
-  };
-
-  componentWillUnmount = () => {
-    this.closeWindow();
-  }
-
-  componentDidUpdate = (prevProps) => {
-    if (prevProps.currentMarker.position !== this.props.currentMarker.position) {
-      this.infoWindow.marker = this.props.currentMarker;
-      this.infoWindow.open(this.props.map, this.props.currentMarker);
-    }
-
-    if (prevProps.currentMarker.title !== this.props.currentMarker.title) {
-      this.infoWindow.setContent(this.props.currentMarker.title);
-    }
-  };
-
-  renderInfoWindow = () => {
     this.infoWindow = new window.google.maps.InfoWindow();
     this.infoWindow.marker = this.props.currentMarker;
     this.infoWindow.setContent(this.props.currentMarker.title);
@@ -32,6 +17,20 @@ class InfoWindow extends Component {
     });
   };
 
+  componentWillUnmount = () => {
+    this.closeWindow();
+  };
+
+  componentDidUpdate = (prevProps) => {
+    // Move the info window to new selected marker
+    if (prevProps.currentMarker.position !== this.props.currentMarker.position) {
+      this.infoWindow.marker = this.props.currentMarker;
+      this.infoWindow.open(this.props.map, this.props.currentMarker);
+      this.infoWindow.setContent(this.props.currentMarker.title);
+    }
+  };
+
+  // Removes the infoindow and currentMarker gets set to null
   closeWindow = () => {
     if (this.infoWindow) {
       this.infoWindow.marker = null;
@@ -78,9 +77,8 @@ class InfoWindow extends Component {
               </div>
             ))}
 
-            <small className="credit">Venue information from Foursquare</small>
+            <small className="credit">Images & venue information from Foursquare</small>
           </div>
-
 
         </div>
       </div>

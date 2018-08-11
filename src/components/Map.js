@@ -17,7 +17,7 @@ class Map extends Component {
         position: window.google.maps.ControlPosition.LEFT_BOTTOM
       },
       mapTypeControl: false,
-      streetViewControl: true,
+      streetViewControl: false,
       fullscreenControl: false
     });
 
@@ -40,7 +40,7 @@ class Map extends Component {
 
   render() {
     const { map } = this.state;
-    const { filteredLocations, showInfoWindow, hideInfoWindow, addMarker, currentMarker, infoWindow, removeMarker } = this.props;
+    const { filteredLocations, showInfoWindow, hideInfoWindow, addMarker, currentMarker, removeMarker } = this.props;
     this.centerMap();
 
     return (
@@ -62,13 +62,12 @@ class Map extends Component {
           </Fragment>
         )}
         {currentMarker && (
-            <InfoWindow
-              currentMarker={currentMarker}
-              map={map}
-              infoWindow={infoWindow}
-              hideInfoWindow={hideInfoWindow}
-            >
-            </InfoWindow>
+          <InfoWindow
+            currentMarker={currentMarker}
+            map={map}
+            hideInfoWindow={hideInfoWindow}
+          >
+          </InfoWindow>
         )}
       </div>
     );
@@ -78,7 +77,12 @@ class Map extends Component {
 Map.propTypes = {
   settings: PropTypes.object.isRequired,
   locations: PropTypes.array.isRequired,
+  filteredLocations: PropTypes.array,
   currentMarker: PropTypes.object,
+  addMarker: PropTypes.func,
+  removeMarker: PropTypes.func,
+  showInfoWindow: PropTypes.func,
+  hideInfoWindow: PropTypes.func
 };
 
 export default Map;

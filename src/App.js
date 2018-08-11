@@ -21,21 +21,23 @@ class App extends Component {
     filteredLocations: data,
     query: '',
     currentMarker: null,
-    infoWindow: false,
   };
 
   componentDidMount = () => {
+    // Load the map and get the data from Foursquare
     if(!this.state.isDataLoaded && !this.state.isAPILoaded) {
       this.loadMap();
       this.addVenues();
     }
   };
 
+  // Keeps track of the markers
   markers = [];
   addMarker = (marker) => {
     if (marker) this.markers.push(marker);
   };
 
+  // Removes the marker
   removeMarker = (marker) => {
     if (marker) {
       const updatedMarkers = this.markers.filter(m => m.id !== marker.id);
@@ -43,20 +45,24 @@ class App extends Component {
     }
   };
 
+  // Find the marker that matches the location selected from the locations list
   findMarker = (id) => {
     const activeMarker = this.markers.filter(marker => marker.id === id)[0];
     this.showInfoWindow(activeMarker);
   };
 
+  // Shows the info window when a marker have been selected
   showInfoWindow = (marker) => {
     if (marker === this.state.currentMarker) return;
-    this.setState({currentMarker: marker, infoWindow: true});
+    this.setState({currentMarker: marker});
   };
 
+  // Hides the infowindow
   hideInfoWindow = () => {
-    this.setState({currentMarker: null, infoWindow: false});
+    this.setState({currentMarker: null});
   };
 
+  // Handles the query and filters the locations based on it
   handleSearch = (event) => {
     const query = event.target.value;
     this.setState({ query: query.trim() });
@@ -92,6 +98,7 @@ class App extends Component {
   //https://stackoverflow.com/questions/42847126/script-load-in-react
   //https://stackoverflow.com/questions/38016471/do-multiple-fetch-promises
   addVenues = () => {
+    // Sets up a promise for each location that needes data fetched
     var promises = this.state.locations.map(location => {
       return this.fetchLocationData(`${location.position.lat},${location.position.lng}`).then(data => {
         location.venues = data.response.groups[0].items;
@@ -99,6 +106,7 @@ class App extends Component {
       });
     });
 
+    // Then when done update the state based on success or error
     return Promise.all(promises)
       .then(() => {
         this.setState({ isDataLoaded: true });
@@ -108,6 +116,7 @@ class App extends Component {
       });
   };
 
+  // Fetches data from the Foursquare API based on the location given
   fetchLocationData = (position) => {
     const url = 'https://api.foursquare.com/v2/venues/explore';
     const client_id = 'VLYXZK00M53WWOEMPTSFOHD0AF0KYGDRTS0GOPCDQ5OGTGW0';
@@ -117,7 +126,7 @@ class App extends Component {
   };
 
   render() {
-    const { query, isAPILoaded, isDataLoaded, settings, currentMarker, infoWindow, locations } = this.state;
+    const { query, isAPILoaded, isDataLoaded, settings, currentMarker, locations, error } = this.state;
     const filteredLocations = this.filterLocations();
 
     return (
@@ -134,10 +143,12 @@ class App extends Component {
             addMarker={this.addMarker}
             removeMarker={this.removeMarker}
             currentMarker={currentMarker}
-            infoWindow={infoWindow}
             showInfoWindow={this.showInfoWindow}
             hideInfoWindow={this.hideInfoWindow}
             />
+        )}
+        {isAPILoaded && isDataLoaded && error && (
+          <div className="error">There was an error loading the map and getting the data:<br /> {this.state.error}</div>
         )}
       </div>
     );

@@ -29,6 +29,7 @@ class Marker extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    // Animates the selected marker
     if (this.props.currentMarker && this.marker.id === this.props.currentMarker.id) {
       this.setIcon(iconMarkerFocus);
       this.marker.setAnimation(window.google.maps.Animation.BOUNCE);
@@ -40,6 +41,7 @@ class Marker extends Component {
       this.setIcon(iconMarker);
     }
 
+    // Removes the old marker and renders the new one
     if (this.props.map !== prevProps.map || this.props.marker.position !== prevProps.marker.position) {
       if (this.marker) {
         this.props.removeMarker(this.marker);
@@ -73,6 +75,7 @@ class Marker extends Component {
     this.setIcon(iconMarker);
   }
 
+  // Sets the icon image for the marker
   setIcon = (icon) => {
     const img = {
       url: icon,
@@ -89,8 +92,12 @@ class Marker extends Component {
 
 Marker.propTypes = {
   marker: PropTypes.object.isRequired,
+  currentMarker: PropTypes.object,
   map: PropTypes.object.isRequired,
   addMarker: PropTypes.func.isRequired,
+  removeMarker: PropTypes.func.isRequired,
+  showInfoWindow: PropTypes.func,
+  hideInfoWindow: PropTypes.func,
 };
 
 export default Marker;

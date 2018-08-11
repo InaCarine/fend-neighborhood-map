@@ -1,4 +1,4 @@
-/* TODO: Import fonts */
+/* Global styles */
 * {
   box-sizing: border-box;
 }
@@ -25,6 +25,8 @@ img {
   height: 100%;
 }
 
+
+/* Header & search */
 .header {
   position: absolute;
   top: 0;
@@ -88,6 +90,8 @@ img {
   line-height: 1;
 }
 
+
+
 /* Locations list */
 .nav-locations {
   position: absolute;
@@ -145,7 +149,6 @@ img {
 
 .locations.open {
   right: 0;
-  /* position: relative; */
 }
 
 .location button {
@@ -170,6 +173,9 @@ img {
   color: #fff;
 }
 
+
+
+/* Information window for a location */
 .location-info {
   position: absolute;
   bottom: -0;
@@ -247,6 +253,9 @@ img {
   padding: 0 10px 0;
 }
 
+
+
+/* Venue information */
 .location-info__content {
   padding: 1rem;
   color: #333;
@@ -298,6 +307,19 @@ img {
   font-weight: 500;
 }
 
+
+
+.error {
+  position: fixed;
+  top: 30vh;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+}
+
+
+
 /* Utility */
 .visually-hidden {
   position: absolute;
@@ -313,6 +335,8 @@ img {
 }
 
 
+
+/* Breakpoints */
 @media screen and (min-width: 460px) {
   .location-info__content {
     display: grid;
