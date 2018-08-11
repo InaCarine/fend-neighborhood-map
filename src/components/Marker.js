@@ -63,7 +63,7 @@ class Marker extends Component {
       animation: window.google.maps.Animation.DROP,
       id: this.props.marker.id,
       photo: this.props.marker.photo,
-      venues: this.props.marker.venues
+      venues: this.props.marker.venues,
     });
 
     this.props.addMarker(this.marker);

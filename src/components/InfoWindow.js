@@ -59,26 +59,28 @@ class InfoWindow extends Component {
             <img src={currentMarker.photo} alt="" />
           </div>
 
-          <div className="location-info__content">
-            <h3 className="location-info__content-title">Venues</h3>
-            {currentMarker.venues.map(venue => (
-              <div key={venue.venue.id} className="location-info__venue">
-                <h4 className="venue__name">{venue.venue.name}</h4>
-                <p className="venue__category">{venue.venue.categories[0].name}</p>
-                <address className="venue__address">
-                  {venue.venue.location.address &&
-                    <span>{venue.venue.location.address}</span>
-                  }
-                  {venue.venue.location.city &&
-                    <span>{venue.venue.location.city}</span>
-                  }
-                  Norway
+          {currentMarker.venues && currentMarker.venues.length > 0 && (
+            <div className="location-info__content">
+              <h3 className="location-info__content-title">Venues</h3>
+              {currentMarker.venues.map(venue => (
+                <div key={venue.venue.id} className="location-info__venue">
+                  <h4 className="venue__name">{venue.venue.name}</h4>
+                  <p className="venue__category">{venue.venue.categories[0].name}</p>
+                  <address className="venue__address">
+                    {venue.venue.location.address &&
+                      <span>{venue.venue.location.address}</span>
+                    }
+                    {venue.venue.location.city &&
+                      <span>{venue.venue.location.city}</span>
+                    }
+                    Norway
                 </address>
-              </div>
-            ))}
+                </div>
+              ))}
 
-            <small className="credit">Images & venue information from Foursquare</small>
-          </div>
+              <small className="credit">Images & venue information from Foursquare</small>
+            </div>
+          )}
 
         </div>
       </div>

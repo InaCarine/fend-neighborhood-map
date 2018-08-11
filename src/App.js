@@ -12,7 +12,7 @@ class App extends Component {
   state = {
     isAPILoaded: false,
     isDataLoaded: false,
-    error: null,
+    error: '',
     settings: {
       center: { lat: 59.9139, lng: 10.7522 },
       zoom: 8,
@@ -91,7 +91,7 @@ class App extends Component {
         this.setState({ isAPILoaded: true });
       })
       .catch(error => {
-        this.setState({ isAPILoaded: false, error: error });
+        this.setState({ isAPILoaded: false, error: error.toString() });
       });
   };
 
@@ -100,10 +100,15 @@ class App extends Component {
   addVenues = () => {
     // Sets up a promise for each location that needes data fetched
     var promises = this.state.locations.map(location => {
-      return this.fetchLocationData(`${location.position.lat},${location.position.lng}`).then(data => {
-        location.venues = data.response.groups[0].items;
-        return data;
-      });
+      return this.fetchLocationData(`${location.position.lat},${location.position.lng}`)
+        .then(data => {
+          console.log(data);
+
+          location.venues = data.response.groups[0].items;
+          console.log(location.venues);
+
+          return data;
+        })
     });
 
     // Then when done update the state based on success or error
@@ -111,23 +116,35 @@ class App extends Component {
       .then(() => {
         this.setState({ isDataLoaded: true });
       })
-      .catch(function (error) {
-        this.setState({ isDataLoaded: false, error: error });
+      .catch(error => {
+        this.setState({ isDataLoaded: false, error: error.toString() });
       });
   };
 
   // Fetches data from the Foursquare API based on the location given
+  // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
   fetchLocationData = (position) => {
     const url = 'https://api.foursquare.com/v2/venues/explore';
     const client_id = 'VLYXZK00M53WWOEMPTSFOHD0AF0KYGDRTS0GOPCDQ5OGTGW0';
     const client_secret = '5O3AKQS3MXFSO2H1GR3AG5BKN3IUD3SJ1GCSNGB5AR21EVLQ';
     return fetch(`${url}?client_id=${client_id}&client_secret=${client_secret}&v=20180323&ll=${position}&limit=3`)
-      .then(response => response.json());
+      .then(response => {
+        if(!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json()
+      });
   };
 
   render() {
     const { query, isAPILoaded, isDataLoaded, settings, currentMarker, locations, error } = this.state;
     const filteredLocations = this.filterLocations();
+
+    let errorMessage;
+    if(error) {
+      errorMessage = !isAPILoaded ? 'The following error occured when trying to load the map:' :
+                                    'The following error occured when trying to fetch venue information:';
+    }
 
     return (
       <div className="App">
@@ -147,8 +164,8 @@ class App extends Component {
             hideInfoWindow={this.hideInfoWindow}
             />
         )}
-        {isAPILoaded && isDataLoaded && error && (
-          <div className="error">There was an error loading the map and getting the data:<br /> {this.state.error}</div>
+        {(!isAPILoaded || !isDataLoaded) && error && (
+          <div className="error">{errorMessage}<br /> {error}</div>
         )}
       </div>
     );
