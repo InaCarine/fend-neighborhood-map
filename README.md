@@ -30,3 +30,14 @@ To create a production build, use npm run build.
 ```
 
 There should already be a tab opened up in your browser with the app, if not go to the following url http://localhost:3000/.
+
+## Offline use
+This project uses the default service worker that comes with Create React App. The service worker only works in production build and not in the development build. For testing the service worker, run the following command: `npm run build`.
+
+You will then need to setup a local server to view the app:
+```
+  npm install -g serve
+  serve -s build
+```
+
+When the server is up and working you can view the app on the following url: http://localhost:5000
