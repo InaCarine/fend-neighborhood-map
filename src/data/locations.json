@@ -6,7 +6,10 @@
       "lat": 59.9139,
       "lng": 10.7522
     },
-    "photo": "//igx.4sqi.net/img/general/width960/11378796_U-Es5q6RnFoixOowMiKKYvKWpWR8LUzbYF93hFOczaI.jpg"
+    "photo": {
+      "url": "//igx.4sqi.net/img/general/width960/11378796_U-Es5q6RnFoixOowMiKKYvKWpWR8LUzbYF93hFOczaI.jpg",
+      "alt": "Sculptures in the Vigeland Sculpture Park in Oslo"
+    }
   },
   {
     "id": "trondheim",
@@ -15,16 +18,22 @@
       "lat": 63.4305,
       "lng": 10.3951
     },
-    "photo": "//igx.4sqi.net/img/general/width960/575261_LeRVZqXcX_PBwioxu3TZ0KsbbSNQI7rTL0XKj-ekaoM.jpg"
+    "photo": {
+      "url": "//igx.4sqi.net/img/general/width960/575261_LeRVZqXcX_PBwioxu3TZ0KsbbSNQI7rTL0XKj-ekaoM.jpg",
+      "alt": "Nidaros Cathedral in Trondheim"
+    }
   },
   {
-    "id": "geirangerfjorden",
-    "name": "Geirangerfjorden",
+    "id": "geiranger",
+    "name": "Geiranger",
     "position": {
       "lat": 62.1015,
       "lng": 7.0941
     },
-    "photo": "//igx.4sqi.net/img/general/width960/493342581_BrG8e2ENTX_cv_in7Xl4t18562GQArQBZbSgHqKbfFI.jpg"
+    "photo": {
+      "url": "//igx.4sqi.net/img/general/width960/493342581_BrG8e2ENTX_cv_in7Xl4t18562GQArQBZbSgHqKbfFI.jpg",
+      "alt": "The Geiranger Fjord "
+    }
   },
   {
     "id": "bergen",
@@ -33,7 +42,10 @@
       "lat": 60.3913,
       "lng": 5.3221
     },
-    "photo": "//igx.4sqi.net/img/general/width960/hst9JaUMs0PXqGVDuwhw5sRZ_JwbDZnnE0p10s_xKBk.jpg"
+    "photo": {
+      "url": "//igx.4sqi.net/img/general/width960/hst9JaUMs0PXqGVDuwhw5sRZ_JwbDZnnE0p10s_xKBk.jpg",
+      "alt": "Amazing view of Bergen from the Fløien mountain"
+    }
   },
   {
     "id": "hemsedal",
@@ -42,6 +54,9 @@
       "lat": 60.8601,
       "lng": 8.5179
     },
-    "photo": "//igx.4sqi.net/img/general/width960/424250__J0MO2E2bE9O2gQG9nB4iry1svTB-8Flfbqv8pqFq0s.jpg"
+    "photo": {
+      "url": "//igx.4sqi.net/img/general/width960/424250__J0MO2E2bE9O2gQG9nB4iry1svTB-8Flfbqv8pqFq0s.jpg",
+      "alt": "Ski area in Hemsedal"
+    }
   }
 ]

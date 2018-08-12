@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Map from './components/Map';
 import Header from './components/Header';
 import ListLocations from './components/ListLocations';
@@ -73,7 +73,7 @@ class App extends Component {
     const { locations, query, isAPILoaded } = this.state;
     let filtered;
 
-    if (query && isAPILoaded === true) {
+    if (query && isAPILoaded) {
       // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
       const escapeString = query.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&');
       const match = new RegExp(escapeString, 'i');
@@ -88,11 +88,19 @@ class App extends Component {
   loadMap = () => {
     GoogleAPI.load()
       .then(() => {
+        if (window.google === undefined) {
+          throw Error();
+        }
+
         this.setState({ isAPILoaded: true });
       })
-      .catch(error => {
-        this.setState({ isAPILoaded: false, error: error.toString() });
+      .catch(() => {
+        this.setState({ isAPILoaded: false, error: 'Failed to load Google Maps' });
       });
+
+    window.gm_authFailure = () => {
+      this.setState({ isAPILoaded: false, error: 'Failed to connect to Google Maps' });
+    };
   };
 
   //https://stackoverflow.com/questions/42847126/script-load-in-react
@@ -102,11 +110,7 @@ class App extends Component {
     var promises = this.state.locations.map(location => {
       return this.fetchLocationData(`${location.position.lat},${location.position.lng}`)
         .then(data => {
-          console.log(data);
-
           location.venues = data.response.groups[0].items;
-          console.log(location.venues);
-
           return data;
         })
     });
@@ -142,30 +146,30 @@ class App extends Component {
 
     let errorMessage;
     if(error) {
-      errorMessage = !isAPILoaded ? 'The following error occured when trying to load the map:' :
-                                    'The following error occured when trying to fetch venue information:';
+      errorMessage = !isAPILoaded ? '' :
+                                    'Foursquare API - ';
     }
 
     return (
       <div className="App">
         <Header query={query} handleSearch={this.handleSearch} />
-        {isAPILoaded && (
-          <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
-        )}
         {isAPILoaded && isDataLoaded && (
-          <Map
-            settings={settings}
-            locations={locations}
-            filteredLocations={filteredLocations}
-            addMarker={this.addMarker}
-            removeMarker={this.removeMarker}
-            currentMarker={currentMarker}
-            showInfoWindow={this.showInfoWindow}
-            hideInfoWindow={this.hideInfoWindow}
-            />
+          <Fragment>
+            <ListLocations filteredLocations={filteredLocations} findMarker={this.findMarker} />
+            <Map
+              settings={settings}
+              locations={locations}
+              filteredLocations={filteredLocations}
+              addMarker={this.addMarker}
+              removeMarker={this.removeMarker}
+              currentMarker={currentMarker}
+              showInfoWindow={this.showInfoWindow}
+              hideInfoWindow={this.hideInfoWindow}
+              />
+          </Fragment>
         )}
-        {(!isAPILoaded || !isDataLoaded) && error && (
-          <div className="error">{errorMessage}<br /> {error}</div>
+        {((!isAPILoaded) || !isDataLoaded) && error && (
+          <div className="error">The following error occured when trying to load the application:<br /> {errorMessage} {error}</div>
         )}
       </div>
     );

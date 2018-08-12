@@ -13,9 +13,6 @@ class Map extends Component {
       center: this.props.settings.center,
       zoom: this.props.settings.zoom,
       zoomControl: true,
-      zoomControlOptions: {
-        position: window.google.maps.ControlPosition.LEFT_BOTTOM
-      },
       mapTypeControl: false,
       streetViewControl: false,
       fullscreenControl: false

@@ -45,18 +45,18 @@ class InfoWindow extends Component {
     let localTime = new Date().toLocaleTimeString("en-GB", { timeZone: "Europe/Oslo", hour: '2-digit', minute: '2-digit' });
 
     return (
-      <div className="location-info">
+      <div className="location-info" tabIndex="0" aria-labelledby="location-title" >
         <div className="location-info-wrapper">
-          <div className="location-info__header" aria-label="Location information" tabIndex="-1">
+          <div className="location-info__header" aria-label="Location information">
             <div className="location-info__title">
-              <h2>
+              <h2 id="location-title">
                 {currentMarker.title}
                 <span className="country">Norway</span>
               </h2>
-              <span className="time">{localTime}</span>
+              <span className="time"><span className="visually-hidden">Local time: </span>{localTime}</span>
               <button onClick={this.closeWindow} className="close"><span className="visually-hidden">Close location info</span><span aria-hidden="true">X</span></button>
             </div>
-            <img src={currentMarker.photo} alt="" />
+            <img src={currentMarker.photo.url} alt={currentMarker.photo.alt} />
           </div>
 
           {currentMarker.venues && currentMarker.venues.length > 0 && (

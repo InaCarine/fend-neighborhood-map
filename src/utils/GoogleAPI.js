@@ -12,7 +12,7 @@ export const load = () => {
     const root = document.getElementById('root');
     const googleScriptTag = document.createElement('script');
     googleScriptTag.src = api + `?key=${key}`;
-    googleScriptTag.async = true;
+    googleScriptTag.defer = true;
 
     googleScriptTag.addEventListener('load', () => { resolve()});
     googleScriptTag.addEventListener('error', (e) => { reject(e)});
