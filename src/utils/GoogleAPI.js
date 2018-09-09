@@ -1,5 +1,5 @@
 const api = 'https://maps.googleapis.com/maps/api/js';
-const key = 'AIzaSyDp6EaOjIVW_TlxSgwbqkuMTdS3RzADPe8';
+const key = 'KEY';
 
 /*
 * @description: Loads the Google Map API script and
